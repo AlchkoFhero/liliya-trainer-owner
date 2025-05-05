@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Лилия Фёдорова — Секреты Молодости и Энергии</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0A0F1E;
+            color: #E0E0E0;
+        }
+
+        header {
+            background-color: #111522;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header img.portrait {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #C2883D;
+        }
+
+        header .branding {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        header .branding img {
+            height: 40px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin: 20px 0 10px;
+            text-align: center;
+        }
+
+        p.subtitle {
+            color: #C2883D;
+            font-size: 16px;
+            text-align: center;
+            max-width: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin-top: 20px;
+            background-color: #C2883D;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+
+        section {
+            padding: 40px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        h2 {
+            color: #DAA520;
+            border-bottom: 1px solid #DAA520;
+            padding-bottom: 5px;
+        }
+
+        .section-block {
+            margin-bottom: 30px;
+        }
+
+        ul {
+            line-height: 1.6;
+        }
+
+        .audio-container {
+            margin: 40px auto;
+            max-width: 600px;
+            background: rgba(17, 21, 34, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .audio-controls {
+            text-align: center;
+            margin: 20px 0;
+            color: #DAA520;
+        }
+
+        .progress-container {
+            margin: 15px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(218, 165, 32, 0.2);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        #progress {
+            width: 0%;
+            height: 100%;
+            background: #DAA520;
+            border-radius: 3px;
+            transition: width 0.1s;
+            position: relative;
+        }
+
+        #progress::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: -4px;
+            width: 14px;
+            height: 14px;
+            background: #DAA520;
+            border-radius: 50%;
+            transition: transform 0.1s;
+        }
+
+        .progress-bar:hover #progress::after {
+            transform: scale(1.2);
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #DAA520;
+        }
+
+        #playButton {
+            display: block;
+            margin: 0 auto 20px;
+            padding: 15px 30px;
+            font-size: 16px;
+            background: linear-gradient(45deg, #C2883D, #DAA520);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #playButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(218, 165, 32, 0.3);
+        }
+
+        p {
+            max-width: 800px;
+            margin: 0 auto 1.5em;
+            line-height: 1.8;
+            text-align: justify;
+            hyphens: auto;
+            -webkit-hyphens: auto;
+            -moz-hyphens: auto;
+            padding: 0 20px;
+        }
+
+        .philosophy-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .philosophy-list li {
+            margin-bottom: 1.2em;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .philosophy-list li::before {
+            content: "•";
+            color: #DAA520;
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="Mama_portrait_bw.jpeg" alt="Лилия Фёдорова" class="portrait" />
+        <h1>Лилия Фёдорова</h1>
+        <div class="branding">
+            <img src="logo.webp" alt="Логотип студии">
+            <img src="name-so-tvorenie.webp" alt="Название студии">
+        </div>
+        <p class="subtitle">Секреты Молодости, Силы и Энергии в 70+ – Проверено Лично и более чем 30-ю Годами Опыта!</p>
+        <p class="subtitle">Ведущий тренер, эксперт по оздоровительным программам и основатель сети студий "Со-Творение"
+        </p>
+        <p class="subtitle">Ваш Проводник к Лучшей Версии Себя – в Любом Возрасте!</p>
+        <p class="subtitle">Родилась в 1954-м, и точно знаю, как фитнес помогает сохранить здоровье, красоту и бодрость
+            на долгие годы!</p>
+        <p class="subtitle">Готова поделиться этими знаниями с вами!</p>
+
+        <a class="btn" href="#contacts">Открыть Секреты Долголетия | Записаться на Встречу</a>
+    </header>
+
+    <section>
+        <div class="section-block">
+            <h2>Аудио: Моя история</h2>
+            <div class="audio-container">
+                <button class="btn" id="playButton">
+                    <i class="fas fa-play"></i> Послушать подкаст
+                </button>
+                <div class="audio-controls">
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div id="progress"></div>
+                        </div>
+                        <div class="time-display">
+                            <span id="currentTime">0:00</span>
+                            <span id="duration">0:00</span>
+                        </div>
+                    </div>
+                </div>
+                <audio id="audioPlayer" src="Longevity Secrets Through Fitness at 70+.wav" preload="metadata"></audio>
+            </div>
+
+            <script>
+                const audioPlayer = document.getElementById('audioPlayer');
+                const playButton = document.getElementById('playButton');
+                const progressBar = document.getElementById('progress');
+                const currentTimeSpan = document.getElementById('currentTime');
+                const durationSpan = document.getElementById('duration');
+
+                function formatTime(seconds) {
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = Math.floor(seconds % 60);
+                    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+                }
+
+                playButton.addEventListener('click', () => {
+                    if (audioPlayer.paused) {
+                        audioPlayer.play();
+                        playButton.textContent = 'Пауза';
+                    } else {
+                        audioPlayer.pause();
+                        playButton.textContent = 'Продолжить';
+                    }
+                });
+
+                audioPlayer.addEventListener('timeupdate', () => {
+                    const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                    progressBar.style.width = progress + '%';
+                    currentTimeSpan.textContent = formatTime(audioPlayer.currentTime);
+                });
+
+                audioPlayer.addEventListener('loadedmetadata', () => {
+                    durationSpan.textContent = formatTime(audioPlayer.duration);
+                });
+
+                audioPlayer.addEventListener('ended', () => {
+                    playButton.textContent = 'Послушать снова';
+                    progressBar.style.width = '0%';
+                });
+
+                document.querySelector('.progress-bar').addEventListener('click', (e) => {
+                    const rect = e.target.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const width = rect.width;
+                    const percentage = x / width;
+                    audioPlayer.currentTime = percentage * audioPlayer.duration;
+                });
+            </script>
+        </div>
+
+        <div class="section-block">
+            <h2>Моя история</h2>
+            <p>Здравствуйте! Меня зовут Лилия Фёдорова. И я – живое доказательство того, что возраст – это лишь
+                цифра, а
+                фитнес – ключ к долгой, активной и красивой жизни.</p>
+            <p>Мой путь в фитнес начался не со спортивных амбиций. После родов я столкнулась с проблемами со
+                здоровьем,
+                и именно врачи и мой муж настояли на том, что мне нужны тренировки. Это было непросто, но поддержка
+                близких и первые результаты изменили все. Я не просто восстановилась – я почувствовала прилив сил,
+                радость движения и увидела, как меняется мое тело.</p>
+            <p>Именно тогда, в 1994 году, я поняла свою миссию: делиться этим чудом с другими женщинами. Я получила
+                лучшее профильное образование у профессора Селуянова, прошла бесчисленное количество курсов и
+                открыла
+                свои первые студии "Со-творение".</p>
+            <p>В 2024 году, нашей сети студий исполнилось 30 лет. А мне? Я родилась в 1954-м году, и да, мне уже больше
+                70-и
+                лет. И я с гордостью говорю: я чувствую себя и выгляжу прекрасно – и это прямое следствие моей любви
+                к
+                фитнесу и разработанной мной системе. За эти десятилетия я не просто тренировала других, я нашла,
+                опробовала и отточила те самые работающие способы, которые позволяют сохранить долголетие, сияющий
+                внешний вид, неиссякаемую бодрость, настоящую силу и крепкое здоровье. Это не волшебство, это знание
+                и
+                практика, которыми я с огромным удовольствием поделюсь с вами!</p>
+            <p>Я знаю, как сложно бывает начать. Но я также знаю, какое это невероятное счастье – владеть своим
+                телом,
+                чувствовать его силу и наслаждаться отражением в зеркале в любом возрасте. Я здесь, чтобы стать
+                вашим
+                проводником на этом пути.</p>
+        </div>
+
+        <div class="section-block">
+            <h2>Моя Философия</h2>
+            <p>Моя философия проста: фитнес – это не изнурение, а инвестиция в ваше будущее, в вашу красоту, здоровье и
+                энергию. Это система, доступная каждой женщине.</p>
+
+            <p>Моя авторская методика – это не просто теория. Это система, которая помогла мне самой в 70+ лет
+                оставаться активной, здоровой и полной сил. Это живое доказательство того, что возраст – не помеха
+                красоте и энергии.</p>
+
+            <ul class="philosophy-list">
+                <li>Здоровье – Приоритет №1: Фокус на укреплении "женских" мышц, осанке, гибкости и общем оздоровлении.
+                    Работаем умно, а не тяжело.</li>
+                <li>Понимание Женщин: Программы учитывают все особенности женского организма и психологии, помогая
+                    обрести гармонию тела и духа.</li>
+                <li>Мягкий Старт для Всех: Мой личный опыт позволяет мне эффективно помогать даже тем, кто никогда не
+                    дружил со спортом.</li>
+                <li>Наука + Опыт: Синтез лучших классических (метод Селуянова) и современных (Пилатес, МФР BLACKROLL и
+                    др.) методик, отточенный 30-ю годами практики.</li>
+                <li>Сила Сообщества: Теплая, дружелюбная атмосфера поддержки в студиях "Со-творение", где каждая
+                    чувствует себя своей.</li>
+            </ul>
+
+            <p>Я глубоко убеждена: грамотный фитнес – это ваш личный эликсир молодости, доступный прямо сейчас.</p>
+        </div>
+
+        <div class="section-block">
+            <h2>Программы</h2>
+            <ul>
+                <li>Программы, которые помогли мне и сотням женщин сохранить молодость и здоровье.</li>
+                <li>Авторские методики оздоровления и омоложения</li>
+                <li>"Изотон"</li>
+                <li>Пилатес</li>
+                <li>Йога</li>
+                <li>Калланетик</li>
+                <li>Функциональный тренинг</li>
+                <li>Адаптация для начинающих и разных возрастных групп</li>
+                <li>Скрининг тела</li>
+            </ul>
+        </div>
+
+        <div class="section-block">
+            <h2>Квалификация</h2>
+            <p>Профильное образование, множество сертификатов (предоставлю по требованию), более 30-и лет интенсивной
+                практики, проб, ошибок, изучения различных методик, повышения квалификации и создания реально
+                работающей методики приносящей результаты.</p>
+        </div>
+
+        <div class="section-block">
+            <h2>Достижения и Результаты</h2>
+            <ul>
+                <li>30 лет опыта в фитнесе и оздоровлении</li>
+                <li>Авторская методика, основанная на научных исследованиях и личном опыте</li>
+                <li>Сотни довольных клиентов, которые изменили свою жизнь к лучшему</li>
+                <li>Постоянное обучение и развитие в области фитнеса и здоровья</li>
+            </ul>
+
+            <p>Личный Пример – Лучшее Доказательство: Моя форма, здоровье и энергия в 70+ лет (год рождения 1954) – это
+                результат системы, которой я готова поделиться с вами.</p>
+
+            <p>30 Лет Опыта и Авторская Методика: Глубокие знания и подход, доказавший свою эффективность на сотнях
+                женщин.</p>
+
+            <p>Эксперт по "Мягкому Старту": Знаю, как помочь вам начать комфортно, безопасно и с удовольствием.</p>
+
+            <p>Атмосфера Поддержки: Вы станете частью сообщества, где вас поймут и поддержат.</p>
+
+            <p>Доверие Клиентов: Высочайшая лояльность – лучшее подтверждение качества моей работы.</p>
+        </div>
+
+        <div class="section-block" id="contacts">
+            <h2>Контакты</h2>
+            <ul>
+                <li><strong>Веб-сайт:</strong> <a href="https://studia-sotvorenie.ru"
+                        style="color: #DAA520;">studia-sotvorenie.ru</a></li>
+                <li><strong>Телефон:</strong> +7 (925) 510-99-17</li>
+                <li><strong>Адрес 1:</strong> Москва, ул. Пятницкая, д. 43, корп. 3 (м. Новокузнецкая/Третьяковская)
+                </li>
+                <li><strong>Адрес 2:</strong> Москва, Измайловский бульвар, д. 19 (м. Первомайская/Щелковская)</li>
+            </ul>
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="Liliya_Fedorova_resume.pdf" class="btn">Скачать полное резюме (PDF)</a>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
