@@ -71,18 +71,83 @@
             margin: auto;
         }
 
+        /* Base section padding */
+        .section-block {
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
         h2 {
             color: #DAA520;
             border-bottom: 1px solid #DAA520;
             padding-bottom: 5px;
+            margin-bottom: 1.5em;
         }
 
-        .section-block {
-            margin-bottom: 30px;
-        }
-
+        /* Standardize list padding */
         ul {
             line-height: 1.6;
+            padding: 0 20px;
+            /* Standardized padding */
+            margin: 0 auto 1.5em;
+            list-style: none;
+            max-width: 800px;
+        }
+
+        /* Fix list item padding */
+        ul li {
+            margin-bottom: 0.8em;
+            padding-left: 25px;
+            /* Keep this for bullet positioning */
+            position: relative;
+            text-align: justify;
+            text-justify: distribute;
+            -webkit-hyphens: auto !important;
+            -moz-hyphens: auto !important;
+            -ms-hyphens: auto !important;
+            hyphens: auto !important;
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+
+        /* Bullet points - restored original position */
+        ul li::before {
+            content: "•";
+            color: #DAA520;
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+        }
+
+        /* Standardize paragraph padding */
+        p {
+            max-width: 800px;
+            margin: 0 auto 1.5em;
+            line-height: 1.8;
+            text-align: justify;
+            padding: 0 20px;
+            /* Match the ul padding */
+            -webkit-hyphens: auto !important;
+            -moz-hyphens: auto !important;
+            -ms-hyphens: auto !important;
+            hyphens: auto !important;
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+
+        /* Fix special lists to match standard padding */
+        .philosophy-list,
+        .achievements-check {
+            padding: 0 20px;
+            /* Match standard padding */
+            margin: 0 auto 1.5em;
+            max-width: 800px;
+        }
+
+        /* Ensure lists stay within bounds */
+        .section-block ul {
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .audio-container {
@@ -164,31 +229,28 @@
             box-shadow: 0 5px 15px rgba(218, 165, 32, 0.3);
         }
 
-        p {
-            max-width: 800px;
-            margin: 0 auto 1.5em;
-            line-height: 1.8;
-            text-align: justify;
-            hyphens: auto;
-            -webkit-hyphens: auto;
-            -moz-hyphens: auto;
-            padding: 0 20px;
+        @media (max-width: 768px) {
+
+            .section-block>p,
+            .section-block>ul,
+            .philosophy-list {
+                padding: 0 20px;
+                /* Keep consistent padding */
+            }
         }
 
-        .philosophy-list {
-            list-style: none;
-            padding: 0;
-            margin: 20px 0;
+        @media (max-width: 480px) {
+
+            .section-block>p,
+            .section-block>ul,
+            .philosophy-list {
+                padding: 0 20px;
+                /* Keep consistent padding */
+            }
         }
 
-        .philosophy-list li {
-            margin-bottom: 1.2em;
-            padding-left: 25px;
-            position: relative;
-        }
-
-        .philosophy-list li::before {
-            content: "•";
+        .achievements-check li::before {
+            content: "✓";
             color: #DAA520;
             position: absolute;
             left: 0;
@@ -371,19 +433,18 @@
                 <li>Авторская методика, основанная на научных исследованиях и личном опыте</li>
                 <li>Сотни довольных клиентов, которые изменили свою жизнь к лучшему</li>
                 <li>Постоянное обучение и развитие в области фитнеса и здоровья</li>
+                <li>Начала водить машину в возрасте 68-и лет</li>
             </ul>
 
-            <p>Личный Пример – Лучшее Доказательство: Моя форма, здоровье и энергия в 70+ лет (год рождения 1954) – это
-                результат системы, которой я готова поделиться с вами.</p>
-
-            <p>Авторская Методика: Глубокие знания и подход, доказавший свою эффективность на сотнях
-                женщин.</p>
-
-            <p>Эксперт по "Мягкому Старту": Знаю, как помочь вам начать комфортно, безопасно и с удовольствием.</p>
-
-            <p>Атмосфера Поддержки: Вы станете частью сообщества, где вас поймут и поддержат.</p>
-
-            <p>Доверие Клиентов: Высочайшая лояльность – лучшее подтверждение качества моей работы.</p>
+            <ul class="achievements-check">
+                <li>Личный Пример – Лучшее Доказательство: Моя форма, здоровье и энергия в 70+ лет (год рождения 1954) –
+                    это результат системы, которой я готова поделиться с вами.</li>
+                <li>Авторская Методика: Глубокие знания и подход, доказавший свою эффективность на сотнях женщин.</li>
+                <li>Эксперт по "Мягкому Старту": Знаю, как помочь вам начать комфортно, безопасно и с удовольствием.
+                </li>
+                <li>Атмосфера Поддержки: Вы станете частью сообщества, где вас поймут и поддержат.</li>
+                <li>Доверие Клиентов: Высочайшая лояльность – лучшее подтверждение качества моей работы.</li>
+            </ul>
         </div>
 
         <div class="section-block" id="contacts">
@@ -392,9 +453,10 @@
                 <li><strong>Веб-сайт:</strong> <a href="https://studia-sotvorenie.ru"
                         style="color: #DAA520;">studia-sotvorenie.ru</a></li>
                 <li><strong>Телефон:</strong> +7 (925) 510-99-17</li>
-                <li><strong>Адрес 1:</strong> Москва, ул. Пятницкая, д. 43, корп. 3 (м. Новокузнецкая/Третьяковская)
+                <li><strong>Студия 1:</strong> Москва, ул. Пятницкая, д. 43, корп. 3 (м. Новокузнецкая/Третьяковская)
                 </li>
-                <li><strong>Адрес 2:</strong> Москва, Измайловский бульвар, д. 19 (м. Первомайская/Щелковская)</li>
+                <li><strong>Студия 2:</strong> Москва, Измайловский бульвар, д. 19 (м. Первомайская/Щелковская)</li>
+                <li><strong>Студия 3:</strong> Онлайн консультации, онлайн тренировки, скрининг тела и осанки</li>
             </ul>
             <div style="text-align: center; margin-top: 30px;">
                 <a href="Liliya_Fedorova_resume.pdf" class="btn">Скачать полное резюме (PDF)</a>
