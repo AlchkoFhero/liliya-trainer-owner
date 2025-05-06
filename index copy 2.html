@@ -79,10 +79,53 @@
 
         .section-block {
             margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .section-block>p,
+        .section-block>ul {
+            padding-left: 0;
+            max-width: 800px;
+            margin: 0 auto 1.5em;
         }
 
         ul {
             line-height: 1.6;
+            padding-left: 25px;
+            margin: 1.5em 0;
+        }
+
+        ul li::marker {
+            color: #DAA520;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.8;
+            text-align: justify;
+            hyphens: none;
+            -webkit-hyphens: none;
+            -moz-hyphens: none;
+            word-wrap: normal;
+        }
+
+        .philosophy-list {
+            list-style: none;
+            padding-left: 40px;
+        }
+
+        .philosophy-list li {
+            margin-bottom: 1.2em;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .philosophy-list li::before {
+            content: "•";
+            color: #DAA520;
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
         }
 
         .audio-container {
@@ -164,35 +207,46 @@
             box-shadow: 0 5px 15px rgba(218, 165, 32, 0.3);
         }
 
-        p {
+        @media (max-width: 768px) {
+
+            .section-block>p,
+            .section-block>ul {
+                padding-left: 20px;
+            }
+
+            .philosophy-list {
+                padding-left: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .section-block>p,
+            .section-block>ul {
+                padding-left: 15px;
+            }
+
+            .philosophy-list {
+                padding-left: 15px;
+            }
+        }
+
+        /* Style for Programs, Achievements and Contacts sections */
+        .section-block:has(h2:contains("Программы")) p,
+        .section-block:has(h2:contains("Достижения")) p,
+        #contacts p {
             max-width: 800px;
             margin: 0 auto 1.5em;
             line-height: 1.8;
             text-align: justify;
-            hyphens: auto;
-            -webkit-hyphens: auto;
-            -moz-hyphens: auto;
             padding: 0 20px;
         }
 
-        .philosophy-list {
-            list-style: none;
-            padding: 0;
-            margin: 20px 0;
-        }
-
-        .philosophy-list li {
-            margin-bottom: 1.2em;
-            padding-left: 25px;
-            position: relative;
-        }
-
-        .philosophy-list li::before {
-            content: "•";
+        /* Make bullets golden but keep original padding */
+        .section-block:has(h2:contains("Программы")) ul li::marker,
+        .section-block:has(h2:contains("Достижения")) ul li::marker,
+        #contacts ul li::marker {
             color: #DAA520;
-            position: absolute;
-            left: 0;
-            font-size: 1.2em;
         }
     </style>
 </head>
