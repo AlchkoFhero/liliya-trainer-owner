@@ -42,3 +42,8 @@ next-env.d.ts
 
 #sub-folder
 bkp/
+
+node_modules
+.env
+.env.local
+.netlify

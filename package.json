@@ -1,0 +1,23 @@
+{
+  "name": "liliya-trainer-owner",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlchkoFhero/liliya-trainer-owner.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlchkoFhero/liliya-trainer-owner/issues"
+  },
+  "homepage": "https://github.com/AlchkoFhero/liliya-trainer-owner#readme",
+  "description": "",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}

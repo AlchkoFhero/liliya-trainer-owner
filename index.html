@@ -6,22 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Лилия Фёдорова — Секреты Молодости и Энергии</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/dotenv@16.0.3/lib/main.min.js"></script>
-    <script>
-        // Load environment variables
-        window.env = {};
-        fetch('/.env')
-            .then(response => response.text())
-            .then(data => {
-                data.split('\n').forEach(line => {
-                    const [key, value] = line.split('=');
-                    if (key && value) {
-                        window.env[key.trim()] = value.trim();
-                    }
-                });
-            })
-            .catch(console.error);
-    </script>
     <style>
         body {
             margin: 0;
@@ -814,18 +798,6 @@
                 submitButton.disabled = true;
                 submitButton.textContent = 'Отправка...';
 
-                const message = `
-🌟 LEAD с сайта https://liliya-trainer-owner.netlify.app/
-
-👤 Имя: ${formData.name}
-📞 Телефон: ${formData.phone}
-✉️ Сообщение: ${formData.message}
-
-📆 ${new Date().toLocaleDateString('ru-RU')}
-⏰ ${new Date().toLocaleTimeString('ru-RU')}
-🌐 Источник: Website
-                `;
-
                 const response = await fetch('/.netlify/functions/sendToTelegram', {
                     method: 'POST',
                     headers: {
@@ -834,7 +806,11 @@
                     body: JSON.stringify(formData)
                 });
 
-                if (!response.ok) throw new Error('Ошибка отправки сообщения');
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Ошибка отправки сообщения');
+                }
 
                 responseDiv.innerHTML = '<i class="fas fa-check-circle" style="color: #4CAF50;"></i> Сообщение успешно отправлено!';
                 responseDiv.style.color = '#DAA520';
@@ -842,7 +818,7 @@
 
             } catch (error) {
                 console.error('Error:', error);
-                responseDiv.innerHTML = '<i class="fas fa-times-circle" style="color: #f44336;"></i> Произошла ошибка. Попробуйте позже.';
+                responseDiv.innerHTML = `<i class="fas fa-times-circle" style="color: #f44336;"></i> ${error.message}`;
                 responseDiv.style.color = '#DAA520';
             } finally {
                 submitButton.disabled = false;
