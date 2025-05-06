@@ -481,82 +481,108 @@
             </div>
 
             <script>
-                const audioPlayer = document.getElementById('audioPlayer');
-                const playButton = document.getElementById('playButton');
-                const progressBar = document.getElementById('progress');
-                const currentTimeSpan = document.getElementById('currentTime');
-                const durationSpan = document.getElementById('duration');
+                class AudioPlayerController {
+                    constructor() {
+                        this.audioPlayer = document.getElementById('audioPlayer');
+                        this.playButton = document.getElementById('playButton');
+                        this.progressBar = document.getElementById('progress');
+                        this.currentTimeSpan = document.getElementById('currentTime');
+                        this.durationSpan = document.getElementById('duration');
+                        this.progressContainer = document.querySelector('.progress-bar');
 
-                function formatTime(seconds) {
-                    const minutes = Math.floor(seconds / 60);
-                    const remainingSeconds = Math.floor(seconds % 60);
-                    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-                }
+                        this.isDragging = false;
+                        this.boundHandleMouseMove = this.handleMouseMove.bind(this);
+                        this.boundHandleMouseUp = this.handleMouseUp.bind(this);
 
-                function updateDuration() {
-                    if (isFinite(audioPlayer.duration)) {
-                        durationSpan.textContent = formatTime(audioPlayer.duration);
-                        console.log('Duration updated:', audioPlayer.duration);
+                        this.init();
                     }
-                }
 
-                // Обработчик загрузки метаданных
-                audioPlayer.addEventListener('loadedmetadata', () => {
-                    console.log('Metadata loaded, duration:', audioPlayer.duration);
-                    updateDuration();
-                });
-
-                // Обработчик готовности к воспроизведению
-                audioPlayer.addEventListener('canplay', () => {
-                    console.log('Can play, duration:', audioPlayer.duration);
-                    updateDuration();
-                });
-
-                // Обработчик полной загрузки аудио
-                audioPlayer.addEventListener('loadeddata', () => {
-                    console.log('Data loaded, duration:', audioPlayer.duration);
-                    updateDuration();
-                });
-
-                // Периодическая проверка длительности
-                const durationCheckInterval = setInterval(() => {
-                    if (isFinite(audioPlayer.duration)) {
-                        updateDuration();
-                        clearInterval(durationCheckInterval);
+                    formatTime(seconds) {
+                        const minutes = Math.floor(seconds / 60);
+                        const remainingSeconds = Math.floor(seconds % 60);
+                        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
                     }
-                }, 100);
 
-                playButton.addEventListener('click', () => {
-                    if (audioPlayer.paused) {
-                        audioPlayer.play().then(() => {
-                            playButton.innerHTML = '<i class="fas fa-pause"></i> Пауза';
-                            updateDuration(); // Обновляем длительность при воспроизведении
-                        }).catch(error => {
-                            console.error('Playback failed:', error);
+                    updateProgress() {
+                        if (!this.isDragging && this.audioPlayer.duration) {
+                            const progress = (this.audioPlayer.currentTime / this.audioPlayer.duration) * 100;
+                            this.progressBar.style.width = `${progress}%`;
+                            this.currentTimeSpan.textContent = this.formatTime(this.audioPlayer.currentTime);
+                        }
+                    }
+
+                    updateDuration() {
+                        if (isFinite(this.audioPlayer.duration)) {
+                            this.durationSpan.textContent = this.formatTime(this.audioPlayer.duration);
+                        }
+                    }
+
+                    setCurrentTime(event) {
+                        const rect = this.progressContainer.getBoundingClientRect();
+                        const x = Math.max(0, Math.min(event.clientX - rect.left, rect.width));
+                        const percentage = x / rect.width;
+
+                        if (isFinite(this.audioPlayer.duration)) {
+                            this.audioPlayer.currentTime = percentage * this.audioPlayer.duration;
+                        }
+                    }
+
+                    handleMouseMove(event) {
+                        if (this.isDragging) {
+                            this.setCurrentTime(event);
+                            event.preventDefault();
+                        }
+                    }
+
+                    handleMouseUp() {
+                        this.isDragging = false;
+                        document.removeEventListener('mousemove', this.boundHandleMouseMove);
+                        document.removeEventListener('mouseup', this.boundHandleMouseUp);
+                    }
+
+                    init() {
+                        // Обработчики для метаданных и длительности
+                        this.audioPlayer.addEventListener('loadedmetadata', () => this.updateDuration());
+                        this.audioPlayer.addEventListener('durationchange', () => this.updateDuration());
+                        this.audioPlayer.addEventListener('timeupdate', () => this.updateProgress());
+
+                        // Обработчик кнопки воспроизведения
+                        this.playButton.addEventListener('click', async () => {
+                            try {
+                                if (this.audioPlayer.paused) {
+                                    await this.audioPlayer.play();
+                                    this.playButton.innerHTML = '<i class="fas fa-pause"></i> Пауза';
+                                } else {
+                                    this.audioPlayer.pause();
+                                    this.playButton.innerHTML = '<i class="fas fa-play"></i> Продолжить';
+                                }
+                            } catch (error) {
+                                console.error('Ошибка воспроизведения:', error);
+                            }
                         });
-                    } else {
-                        audioPlayer.pause();
-                        playButton.innerHTML = '<i class="fas fa-play"></i> Продолжить';
+
+                        // Обработчики для прогресс-бара
+                        this.progressContainer.addEventListener('mousedown', (event) => {
+                            this.isDragging = true;
+                            this.setCurrentTime(event);
+                            document.addEventListener('mousemove', this.boundHandleMouseMove);
+                            document.addEventListener('mouseup', this.boundHandleMouseUp);
+                        });
+
+                        // Предотвращение выделения при перетаскивании
+                        this.progressContainer.addEventListener('selectstart', (e) => e.preventDefault());
+
+                        // Обработчик окончания воспроизведения
+                        this.audioPlayer.addEventListener('ended', () => {
+                            this.playButton.innerHTML = '<i class="fas fa-play"></i> Послушать снова';
+                            this.progressBar.style.width = '0%';
+                        });
                     }
-                });
+                }
 
-                audioPlayer.addEventListener('timeupdate', () => {
-                    const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-                    progressBar.style.width = progress + '%';
-                    currentTimeSpan.textContent = formatTime(audioPlayer.currentTime);
-                });
-
-                audioPlayer.addEventListener('ended', () => {
-                    playButton.innerHTML = '<i class="fas fa-play"></i> Послушать снова';
-                    progressBar.style.width = '0%';
-                });
-
-                document.querySelector('.progress-bar').addEventListener('click', (e) => {
-                    const rect = e.target.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const width = rect.width;
-                    const percentage = x / width;
-                    audioPlayer.currentTime = percentage * audioPlayer.duration;
+                // Инициализация плеера после загрузки DOM
+                document.addEventListener('DOMContentLoaded', () => {
+                    new AudioPlayerController();
                 });
             </script>
         </div>
