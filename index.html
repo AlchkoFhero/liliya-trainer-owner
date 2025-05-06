@@ -799,14 +799,18 @@
             const form = event.target;
 
             try {
-                // Get form data
+                // Проверяем загрузку переменных окружения
+                console.log('Токены загружены:', {
+                    hasToken: !!window.env?.TELEGRAM_BOT_TOKEN,
+                    hasChatId: !!window.env?.TELEGRAM_CHAT_ID
+                });
+
                 const formData = {
                     name: form.name.value.trim(),
                     phone: form.phone.value.trim(),
                     message: form.message.value.trim()
                 };
 
-                // Validate form
                 if (!formData.name || !formData.phone || !formData.message) {
                     responseDiv.innerHTML = '<i class="fas fa-exclamation-circle" style="color: #f44336;"></i> Пожалуйста, заполните все поля.';
                     responseDiv.style.color = '#DAA520';
@@ -827,22 +831,31 @@
 
                 const cleanPhoneNumber = formData.phone.replace(/\D/g, '');
 
-                // Используем window.env вместо process.env
-                const messageResponse = await fetch(`https://api.telegram.org/bot${window.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                // Логируем попытку отправки (без sensitive data!)
+                console.log('Отправляем сообщение в Telegram...');
+
+                const messageResponse = await fetch(`https://api.telegram.org/bot${window.env?.TELEGRAM_BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        chat_id: window.env.TELEGRAM_CHAT_ID,
+                        chat_id: window.env?.TELEGRAM_CHAT_ID,
                         text: message,
                         parse_mode: 'HTML'
                     })
                 });
 
+                // Логируем ответ от API
+                const responseData = await messageResponse.json();
+                console.log('Ответ API:', {
+                    status: messageResponse.status,
+                    ok: messageResponse.ok,
+                    errorDescription: responseData.description
+                });
+
                 if (!messageResponse.ok) {
-                    const errorData = await messageResponse.json();
-                    throw new Error('Ошибка отправки сообщения');
+                    throw new Error(`Ошибка API: ${responseData.description || 'Неизвестная ошибка'}`);
                 }
 
                 responseDiv.innerHTML = '<i class="fas fa-check-circle" style="color: #4CAF50;"></i> Сообщение успешно отправлено!';
@@ -850,8 +863,11 @@
                 form.reset();
 
             } catch (error) {
-                console.error('Error:', error);
-                responseDiv.innerHTML = '<i class="fas fa-times-circle" style="color: #f44336;"></i> Произошла ошибка. Попробуйте позже.';
+                console.error('Детали ошибки:', {
+                    message: error.message,
+                    stack: error.stack
+                });
+                responseDiv.innerHTML = '<i class="fas fa-times-circle" style="color: #f44336;"></i> Ошибка: ' + error.message;
                 responseDiv.style.color = '#DAA520';
             } finally {
                 submitButton.disabled = false;
