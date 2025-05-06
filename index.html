@@ -792,7 +792,8 @@
 
             // Validate form
             if (!formData.name || !formData.phone || !formData.message) {
-                responseDiv.textContent = 'Пожалуйста, заполните все поля.';
+                responseDiv.innerHTML = '<i class="fas fa-exclamation-circle" style="color: #f44336;"></i> Пожалуйста, заполните все поля.';
+                responseDiv.style.color = '#DAA520';
                 return;
             }
 
@@ -815,16 +816,14 @@
 
                 const cleanPhoneNumber = formData.phone.replace(/\D/g, '');
 
-                const sendMessageURL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-                const sendContactURL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendContact`;
-
-                const messageResponse = await fetch(sendMessageURL, {
+                // Send message
+                const messageResponse = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        chat_id: "520073246",
+                        chat_id: process.env.TELEGRAM_CHAT_ID,
                         text: message,
                         parse_mode: 'HTML'
                     })
@@ -832,13 +831,14 @@
 
                 if (!messageResponse.ok) throw new Error('Ошибка отправки сообщения');
 
-                const contactResponse = await fetch(sendContactURL, {
+                // Send contact
+                const contactResponse = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendContact`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        chat_id: "520073246",
+                        chat_id: process.env.TELEGRAM_CHAT_ID,
                         phone_number: `+${cleanPhoneNumber}`,
                         first_name: `LEAD: ${formData.name}`,
                         last_name: "🌐"
@@ -847,6 +847,7 @@
 
                 if (!contactResponse.ok) throw new Error('Ошибка отправки контакта');
 
+                // Success message
                 responseDiv.innerHTML = '<i class="fas fa-check-circle" style="color: #4CAF50;"></i> Сообщение успешно отправлено!';
                 responseDiv.style.color = '#DAA520';
                 form.reset();
