@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Лилия Фёдорова — Секреты Молодости и Энергии</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/dotenv@16.0.3/lib/main.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -688,7 +689,7 @@
         <div class="section-block">
             <h2>Отправить сообщение</h2>
             <div class="contact-form">
-                <form id="contactForm" name="contact">
+                <form id="contactForm" name="contact" onsubmit="handleSubmit(event)">
                     <div class="form-group">
                         <input type="text" id="name" name="name" placeholder="Ваше имя" required>
                     </div>
@@ -699,8 +700,9 @@
                         <textarea id="message" name="message" placeholder="Ваше сообщение" required></textarea>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn">Отправить сообщение</button>
+                        <button type="submit" class="btn" id="submitButton">Отправить сообщение</button>
                     </div>
+                    <div id="responseMessage" style="text-align: center; margin-top: 10px; color: #DAA520;"></div>
                 </form>
             </div>
         </div>
@@ -767,6 +769,72 @@
             setTimeout(() => {
                 document.getElementById('name').focus();
             }, 1000);
+        }
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+
+            const submitButton = document.getElementById('submitButton');
+            const responseDiv = document.getElementById('responseMessage');
+            const form = event.target;
+
+            // Get form data
+            const formData = {
+                name: form.name.value.trim(),
+                phone: form.phone.value.trim(),
+                message: form.message.value.trim()
+            };
+
+            // Validate form
+            if (!formData.name || !formData.phone || !formData.message) {
+                responseDiv.textContent = 'Пожалуйста, заполните все поля.';
+                return;
+            }
+
+            // Disable button and show loading state
+            submitButton.disabled = true;
+            submitButton.textContent = 'Отправка...';
+
+            try {
+                const message = `
+📝 Новая заявка с сайта
+
+👤 Имя: ${formData.name}
+📞 Телефон: ${formData.phone}
+✉️ Сообщение: ${formData.message}
+
+📆 ${new Date().toLocaleDateString('ru-RU')}
+⏰ ${new Date().toLocaleTimeString('ru-RU')}
+                `;
+
+                // Send to Telegram
+                const response = await fetch(`https://api.telegram.org/bot7420904457:AAFOSxrXEYNTlALbwcIIufHcbfMFiOi5Bls/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: "520073246",
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+
+                if (!response.ok) throw new Error('Ошибка отправки');
+
+                // Success
+                form.reset();
+                responseDiv.textContent = 'Сообщение успешно отправлено!';
+                responseDiv.style.color = '#4CAF50';
+
+            } catch (error) {
+                console.error('Error:', error);
+                responseDiv.textContent = 'Произошла ошибка. Попробуйте позже.';
+                responseDiv.style.color = '#f44336';
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Отправить сообщение';
+            }
         }
     </script>
 </body>
