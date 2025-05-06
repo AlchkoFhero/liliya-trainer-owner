@@ -799,21 +799,12 @@
             const form = event.target;
 
             try {
-                // Debug: Log environment variables access
-                console.log('Checking env variables:', {
-                    botToken: process.env.TELEGRAM_BOT_TOKEN ? 'Token exists' : 'Token missing',
-                    chatId: process.env.TELEGRAM_CHAT_ID ? 'ChatID exists' : 'ChatID missing'
-                });
-
                 // Get form data
                 const formData = {
                     name: form.name.value.trim(),
                     phone: form.phone.value.trim(),
                     message: form.message.value.trim()
                 };
-
-                // Debug: Log form data
-                console.log('Form data:', formData);
 
                 // Validate form
                 if (!formData.name || !formData.phone || !formData.message) {
@@ -834,53 +825,33 @@
 🌐 Источник: Website
                 `;
 
-                // Debug: Log API request details
-                console.log('Preparing to send message to Telegram');
-
                 const cleanPhoneNumber = formData.phone.replace(/\D/g, '');
-                const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-                const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-                // Debug: Log token and chat ID (safely)
-                console.log('API Configuration:', {
-                    hasToken: !!TELEGRAM_BOT_TOKEN,
-                    hasChatId: !!TELEGRAM_CHAT_ID,
-                    messageLength: message.length
-                });
-
-                // Send message
-                const messageResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                // Используем window.env вместо process.env
+                const messageResponse = await fetch(`https://api.telegram.org/bot${window.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        chat_id: TELEGRAM_CHAT_ID,
+                        chat_id: window.env.TELEGRAM_CHAT_ID,
                         text: message,
                         parse_mode: 'HTML'
                     })
                 });
 
-                // Debug: Log message response
-                console.log('Message Response:', {
-                    ok: messageResponse.ok,
-                    status: messageResponse.status
-                });
-
                 if (!messageResponse.ok) {
                     const errorData = await messageResponse.json();
-                    console.error('Telegram API Error:', errorData);
-                    throw new Error(`Ошибка отправки сообщения: ${errorData.description || 'Unknown error'}`);
+                    throw new Error('Ошибка отправки сообщения');
                 }
 
-                // Success handling
                 responseDiv.innerHTML = '<i class="fas fa-check-circle" style="color: #4CAF50;"></i> Сообщение успешно отправлено!';
                 responseDiv.style.color = '#DAA520';
                 form.reset();
 
             } catch (error) {
-                console.error('Detailed Error:', error);
-                responseDiv.innerHTML = `<i class="fas fa-times-circle" style="color: #f44336;"></i> Ошибка: ${error.message}`;
+                console.error('Error:', error);
+                responseDiv.innerHTML = '<i class="fas fa-times-circle" style="color: #f44336;"></i> Произошла ошибка. Попробуйте позже.';
                 responseDiv.style.color = '#DAA520';
             } finally {
                 submitButton.disabled = false;
