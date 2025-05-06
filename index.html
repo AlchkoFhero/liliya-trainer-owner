@@ -799,12 +799,6 @@
             const form = event.target;
 
             try {
-                // Проверяем загрузку переменных окружения
-                console.log('Токены загружены:', {
-                    hasToken: !!window.env?.TELEGRAM_BOT_TOKEN,
-                    hasChatId: !!window.env?.TELEGRAM_CHAT_ID
-                });
-
                 const formData = {
                     name: form.name.value.trim(),
                     phone: form.phone.value.trim(),
@@ -816,6 +810,9 @@
                     responseDiv.style.color = '#DAA520';
                     return;
                 }
+
+                submitButton.disabled = true;
+                submitButton.textContent = 'Отправка...';
 
                 const message = `
 🌟 LEAD с сайта https://liliya-trainer-owner.netlify.app/
@@ -829,45 +826,23 @@
 🌐 Источник: Website
                 `;
 
-                const cleanPhoneNumber = formData.phone.replace(/\D/g, '');
-
-                // Логируем попытку отправки (без sensitive data!)
-                console.log('Отправляем сообщение в Telegram...');
-
-                const messageResponse = await fetch(`https://api.telegram.org/bot${window.env?.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                const response = await fetch('/.netlify/functions/sendToTelegram', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        chat_id: window.env?.TELEGRAM_CHAT_ID,
-                        text: message,
-                        parse_mode: 'HTML'
-                    })
+                    body: JSON.stringify(formData)
                 });
 
-                // Логируем ответ от API
-                const responseData = await messageResponse.json();
-                console.log('Ответ API:', {
-                    status: messageResponse.status,
-                    ok: messageResponse.ok,
-                    errorDescription: responseData.description
-                });
-
-                if (!messageResponse.ok) {
-                    throw new Error(`Ошибка API: ${responseData.description || 'Неизвестная ошибка'}`);
-                }
+                if (!response.ok) throw new Error('Ошибка отправки сообщения');
 
                 responseDiv.innerHTML = '<i class="fas fa-check-circle" style="color: #4CAF50;"></i> Сообщение успешно отправлено!';
                 responseDiv.style.color = '#DAA520';
                 form.reset();
 
             } catch (error) {
-                console.error('Детали ошибки:', {
-                    message: error.message,
-                    stack: error.stack
-                });
-                responseDiv.innerHTML = '<i class="fas fa-times-circle" style="color: #f44336;"></i> Ошибка: ' + error.message;
+                console.error('Error:', error);
+                responseDiv.innerHTML = '<i class="fas fa-times-circle" style="color: #f44336;"></i> Произошла ошибка. Попробуйте позже.';
                 responseDiv.style.color = '#DAA520';
             } finally {
                 submitButton.disabled = false;
