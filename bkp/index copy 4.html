@@ -71,7 +71,6 @@
             margin: auto;
         }
 
-        /* Base section padding */
         .section-block {
             margin-bottom: 30px;
             padding: 0 20px;
@@ -84,70 +83,77 @@
             margin-bottom: 1.5em;
         }
 
-        /* Standardize list padding */
+        /* Basic list styles with justified text */
         ul {
             line-height: 1.6;
-            padding: 0 20px;
-            /* Standardized padding */
+            padding-left: 25px;
+            padding-right: 20px;
             margin: 0 auto 1.5em;
             list-style: none;
             max-width: 800px;
         }
 
-        /* Fix list item padding */
         ul li {
             margin-bottom: 0.8em;
             padding-left: 25px;
-            /* Keep this for bullet positioning */
             position: relative;
             text-align: justify;
-            text-justify: distribute;
-            -webkit-hyphens: auto !important;
-            -moz-hyphens: auto !important;
-            -ms-hyphens: auto !important;
-            hyphens: auto !important;
-            word-break: keep-all;
-            overflow-wrap: break-word;
+            text-justify: inter-word;
+            hyphens: auto;
+            /* Changed to auto for proper hyphenation */
+            -webkit-hyphens: auto;
+            /* Changed to auto for proper hyphenation */
+            -moz-hyphens: auto;
+            /* Changed to auto for proper hyphenation */
+            overflow-wrap: normal;
+            /* Changed to normal */
+            word-wrap: normal;
+            /* Changed to normal */
+            word-break: normal;
+            /* Changed to normal */
         }
 
-        /* Bullet points - restored original position */
-        ul li::before {
-            content: "•";
-            color: #DAA520;
-            position: absolute;
-            left: 0;
-            font-size: 1.2em;
-        }
-
-        /* Standardize paragraph padding */
+        /* Keep original paragraph styles */
         p {
             max-width: 800px;
             margin: 0 auto 1.5em;
             line-height: 1.8;
             text-align: justify;
             padding: 0 20px;
-            /* Match the ul padding */
-            -webkit-hyphens: auto !important;
-            -moz-hyphens: auto !important;
-            -ms-hyphens: auto !important;
-            hyphens: auto !important;
-            word-break: keep-all;
-            overflow-wrap: break-word;
+            hyphens: auto;
+            /* Changed to auto for proper hyphenation */
+            -webkit-hyphens: auto;
+            /* Changed to auto for proper hyphenation */
+            -moz-hyphens: auto;
+            /* Changed to auto for proper hyphenation */
+            overflow-wrap: normal;
+            /* Changed to normal */
+            word-wrap: normal;
+            /* Changed to normal */
+            word-break: normal;
+            /* Changed to normal */
         }
 
-        /* Fix special lists to match standard padding */
-        .philosophy-list,
-        .achievements-check {
-            padding: 0 20px;
-            /* Match standard padding */
+        .philosophy-list {
+            padding-left: 40px;
+            padding-right: 20px;
             margin: 0 auto 1.5em;
-            max-width: 800px;
         }
 
-        /* Ensure lists stay within bounds */
-        .section-block ul {
-            width: 100%;
-            box-sizing: border-box;
+        .philosophy-list li {
+            margin-bottom: 0.8em;
+        }
+
+        .section-block:has(h2:contains("Программы")) ul {
+            margin-top: 0;
+        }
+
+        .section-block:has(h2:contains("Достижения")) ul {
+            margin-top: 0;
+        }
+
+        #contacts ul {
+            margin-top: 0;
         }
 
         .audio-container {
@@ -232,20 +238,24 @@
         @media (max-width: 768px) {
 
             .section-block>p,
-            .section-block>ul,
+            .section-block>ul {
+                padding-left: 20px;
+            }
+
             .philosophy-list {
-                padding: 0 20px;
-                /* Keep consistent padding */
+                padding-left: 20px;
             }
         }
 
         @media (max-width: 480px) {
 
             .section-block>p,
-            .section-block>ul,
+            .section-block>ul {
+                padding-left: 15px;
+            }
+
             .philosophy-list {
-                padding: 0 20px;
-                /* Keep consistent padding */
+                padding-left: 15px;
             }
         }
 
@@ -255,6 +265,13 @@
             position: absolute;
             left: 0;
             font-size: 1.2em;
+        }
+
+        .achievements-check {
+            padding-left: 25px;
+            padding-right: 20px;
+            max-width: 800px;
+            margin: 2em auto 1.5em;
         }
     </style>
 </head>
