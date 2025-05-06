@@ -1,4 +1,3 @@
-// filepath: /Users/alexfedorov/Developer/GitHub/liliya-trainer-owner/netlify.toml
 [build]
   publish = "/"
 
