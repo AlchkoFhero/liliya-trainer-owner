@@ -795,18 +795,36 @@
                 submitButton.disabled = true;
                 submitButton.textContent = 'Отправка...';
 
+                // Форматируем сообщение
+                const telegramMessage = `
+🌟 LEAD с сайта https://liliya-trainer-owner.netlify.app/
+
+👤 Имя: ${formData.name}
+📞 Телефон: ${formData.phone}
+✉️ Сообщение: ${formData.message}
+
+📆 ${new Date().toLocaleDateString('ru-RU')}
+⏰ ${new Date().toLocaleTimeString('ru-RU')}
+🌐 Источник: Website`;
+
+                // Отправляем сообщение и контакт через функцию
                 const response = await fetch('/.netlify/functions/sendToTelegram', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(formData)
+                    body: JSON.stringify({
+                        message: telegramMessage,
+                        contact: {
+                            phone: formData.phone.replace(/\D/g, ''),
+                            firstName: `LEAD: ${formData.name}`,
+                            lastName: "🌐"
+                        }
+                    })
                 });
 
-                const result = await response.json();
-
                 if (!response.ok) {
-                    throw new Error(result.error || 'Ошибка отправки сообщения');
+                    throw new Error('Ошибка отправки сообщения');
                 }
 
                 responseDiv.innerHTML = '<i class="fas fa-check-circle" style="color: #4CAF50;"></i> Сообщение успешно отправлено!';
@@ -815,7 +833,7 @@
 
             } catch (error) {
                 console.error('Error:', error);
-                responseDiv.innerHTML = `<i class="fas fa-times-circle" style="color: #f44336;"></i> ${error.message}`;
+                responseDiv.innerHTML = '<i class="fas fa-times-circle" style="color: #f44336;"></i> Произошла ошибка. Попробуйте позже.';
                 responseDiv.style.color = '#DAA520';
             } finally {
                 submitButton.disabled = false;

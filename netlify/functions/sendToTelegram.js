@@ -1,46 +1,39 @@
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
-exports.handler = async function(event, context) {
-    // Check method
+exports.handler = async function (event, context) {
     if (event.httpMethod !== 'POST') {
         return { statusCode: 405, body: 'Method Not Allowed' };
     }
 
     try {
-        // Parse request data
-        const { name, phone, message } = JSON.parse(event.body);
+        const { message, contact } = JSON.parse(event.body);
 
-        const telegramMessage = `
-🌟 LEAD с сайта https://liliya-trainer-owner.netlify.app/
-
-👤 Имя: ${name}
-📞 Телефон: ${phone}
-✉️ Сообщение: ${message}
-
-📆 ${new Date().toLocaleDateString('ru-RU')}
-⏰ ${new Date().toLocaleTimeString('ru-RU')}
-🌐 Источник: Website`;
-
-        // Get tokens from environment variables
-        const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-        const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
-
-        // Send to Telegram
-        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        // Отправляем сообщение
+        const messageResponse = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: telegramMessage,
+                chat_id: process.env.TELEGRAM_CHAT_ID,
+                text: message,
                 parse_mode: 'HTML'
             })
         });
 
-        const data = await response.json();
+        if (!messageResponse.ok) throw new Error('Failed to send message');
 
-        if (!response.ok) {
-            throw new Error(data.description || 'Failed to send message');
-        }
+        // Отправляем контакт
+        const contactResponse = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendContact`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: process.env.TELEGRAM_CHAT_ID,
+                phone_number: `+${contact.phone}`,
+                first_name: contact.firstName,
+                last_name: contact.lastName
+            })
+        });
+
+        if (!contactResponse.ok) throw new Error('Failed to send contact');
 
         return {
             statusCode: 200,
@@ -51,7 +44,7 @@ exports.handler = async function(event, context) {
         console.error('Function error:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: error.message })
+            body: JSON.stringify({ error: 'Failed to send message' })
         };
     }
 };
