@@ -584,6 +584,158 @@
                 document.addEventListener('DOMContentLoaded', () => {
                     new AudioPlayerController();
                 });
+
+                // Добавьте эти функции перед handleSubmit
+                function formatPhoneNumber(value) {
+                    const hasPlus = value.startsWith('+');
+                    let cleaned = value.replace(/\D/g, '');
+
+                    if (cleaned.length === 0) return '';
+
+                    if (cleaned.startsWith('8') || cleaned.startsWith('7')) {
+                        cleaned = cleaned.substring(1);
+                        return formatRussianNumber(cleaned);
+                    }
+
+                    if (hasPlus) {
+                        return `+${cleaned}`;
+                    }
+
+                    return cleaned;
+                }
+
+                function formatRussianNumber(cleaned) {
+                    const parts = [];
+                    parts.push('+7');
+
+                    if (cleaned.length > 0) {
+                        parts.push(' (');
+                        parts.push(cleaned.substring(0, Math.min(3, cleaned.length)));
+                    }
+
+                    if (cleaned.length > 3) {
+                        parts.push(') ');
+                        parts.push(cleaned.substring(3, Math.min(6, cleaned.length)));
+                    }
+
+                    if (cleaned.length > 6) {
+                        parts.push('-');
+                        parts.push(cleaned.substring(6, Math.min(8, cleaned.length)));
+                    }
+
+                    if (cleaned.length > 8) {
+                        parts.push('-');
+                        parts.push(cleaned.substring(8, Math.min(10, cleaned.length)));
+                    }
+
+                    return parts.join('');
+                }
+
+                function validateForm(formData) {
+                    const errors = {};
+
+                    if (!formData.name.trim()) {
+                        errors.name = 'Пожалуйста, введите ваше имя';
+                    }
+
+                    if (!formData.phone.trim()) {
+                        errors.phone = 'Пожалуйста, введите номер телефона';
+                    } else {
+                        const digits = formData.phone.replace(/\D/g, '');
+                        if (formData.phone.includes('+7') || formData.phone.startsWith('8')) {
+                            if (digits.length !== 11) {
+                                errors.phone = 'Введите корректный российский номер телефона';
+                            }
+                        } else {
+                            if (digits.length < 8) {
+                                errors.phone = 'Номер телефона должен содержать минимум 8 цифр';
+                            }
+                        }
+                    }
+
+                    if (!formData.message.trim()) {
+                        errors.message = 'Пожалуйста, введите сообщение';
+                    }
+
+                    return errors;
+                }
+
+                // Модифицируйте существующий handleSubmit
+                async function handleSubmit(event) {
+                    event.preventDefault();
+
+                    const submitButton = document.getElementById('submitButton');
+                    const responseDiv = document.getElementById('responseMessage');
+                    const form = event.target;
+
+                    try {
+                        const formData = {
+                            name: form.name.value.trim(),
+                            phone: form.phone.value.trim(),
+                            message: form.message.value.trim()
+                        };
+
+                        // Используйте новую функцию валидации
+                        const errors = validateForm(formData);
+                        if (Object.keys(errors).length > 0) {
+                            responseDiv.innerHTML = '<i class="fas fa-exclamation-circle" style="color: #f44336;"></i> ' +
+                                Object.values(errors)[0];
+                            responseDiv.style.color = '#DAA520';
+                            return;
+                        }
+
+                        submitButton.disabled = true;
+                        submitButton.textContent = 'Отправка...';
+
+                        // Форматируем сообщение
+                        const telegramMessage = `
+📝 Новая заявка с сайта liliya-trainer-owner.netlify.app
+🌟 LEAD с сайта
+
+👤 Имя: ${formData.name}
+📞 Телефон: ${formData.phone}
+
+✉️ Сообщение: 
+
+${formData.message}
+
+📆 ${new Date().toLocaleDateString('ru-RU')}
+⏰ ${new Date().toLocaleTimeString('ru-RU')}
+🌐 Источник: Website`;
+
+                        // Отправляем сообщение и контакт через функцию
+                        const response = await fetch('/.netlify/functions/sendToTelegram', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                message: telegramMessage,
+                                contact: {
+                                    phone: formData.phone.replace(/\D/g, ''),
+                                    firstName: `LEAD: ${formData.name}`,
+                                    lastName: "🌐"
+                                }
+                            })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Ошибка отправки сообщения');
+                        }
+
+                        responseDiv.innerHTML = '<i class="fas fa-check-circle" style="color: #4CAF50;"></i> Сообщение успешно отправлено!';
+                        responseDiv.style.color = '#DAA520';
+                        form.reset();
+
+                    } catch (error) {
+                        console.error('Error:', error);
+                        responseDiv.innerHTML = '<i class="fas fa-times-circle" style="color: #f44336;"></i> Произошла ошибка. Попробуйте позже.';
+                        responseDiv.style.color = '#DAA520';
+                    } finally {
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Отправить сообщение';
+                    }
+                }
             </script>
         </div>
 
@@ -752,7 +904,8 @@
                         <input type="text" id="name" name="name" placeholder="Ваше имя" required>
                     </div>
                     <div class="form-group">
-                        <input type="tel" id="phone" name="phone" placeholder="Ваш телефон" required>
+                        <input type="tel" id="phone" name="phone" placeholder="Ваш телефон" required
+                            oninput="this.value = formatPhoneNumber(this.value)">
                     </div>
                     <div class="form-group">
                         <textarea id="message" name="message" placeholder="Ваше сообщение" required></textarea>
@@ -791,15 +944,15 @@
                     <a href="https://www.facebook.com/fitness.moscow.sotvorenie" target="_blank">
                         <i class="fab fa-facebook"></i>
                         <!-- Facebook ==> ЛицоКнига -->
-                        <span>FB : Студия "Со-Творение"</span>
+                        <span>"Со-Творение"</span>
                     </a>
                     <a href="https://www.instagram.com/fitness.moscow.sotvorenie/" target="_blank">
                         <i class="fab fa-instagram"></i>
-                        <span>IG : Студия "Со-Творение"</span>
+                        <span>"Со-Творение"</span>
                     </a>
                     <a href="https://www.instagram.com/alex.fedorov.ph/" target="_blank">
                         <i class="fab fa-instagram"></i>
-                        <span>IG : "Лилия Фёдорова - личное"</span>
+                        <span>Лилия - личное</span>
                     </a>
                 </div>
             </div>
@@ -827,92 +980,6 @@
             </div>
         </div>
     </section>
-
-    <script>
-        function scrollToContacts() {
-            event.preventDefault();
-            const contactsSection = document.getElementById('contacts');
-            const contactForm = document.querySelector('.contact-form');
-
-            contactsSection.scrollIntoView({ behavior: 'smooth' });
-
-            // Small delay to focus on the contact form after scrolling
-            setTimeout(() => {
-                document.getElementById('name').focus();
-            }, 1000);
-        }
-
-        async function handleSubmit(event) {
-            event.preventDefault();
-
-            const submitButton = document.getElementById('submitButton');
-            const responseDiv = document.getElementById('responseMessage');
-            const form = event.target;
-
-            try {
-                const formData = {
-                    name: form.name.value.trim(),
-                    phone: form.phone.value.trim(),
-                    message: form.message.value.trim()
-                };
-
-                if (!formData.name || !formData.phone || !formData.message) {
-                    responseDiv.innerHTML = '<i class="fas fa-exclamation-circle" style="color: #f44336;"></i> Пожалуйста, заполните все поля.';
-                    responseDiv.style.color = '#DAA520';
-                    return;
-                }
-
-                submitButton.disabled = true;
-                submitButton.textContent = 'Отправка...';
-
-                // Форматируем сообщение
-                const telegramMessage = `
-🌟 LEAD с сайта https://liliya-trainer-owner.netlify.app/
-
-👤 Имя: ${formData.name}
-📞 Телефон: ${formData.phone}
-✉️ Сообщение: 
-
-${formData.message}
-
-📆 ${new Date().toLocaleDateString('ru-RU')}
-⏰ ${new Date().toLocaleTimeString('ru-RU')}
-🌐 Источник: Website`;
-
-                // Отправляем сообщение и контакт через функцию
-                const response = await fetch('/.netlify/functions/sendToTelegram', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: telegramMessage,
-                        contact: {
-                            phone: formData.phone.replace(/\D/g, ''),
-                            firstName: `LEAD: ${formData.name}`,
-                            lastName: "🌐"
-                        }
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Ошибка отправки сообщения');
-                }
-
-                responseDiv.innerHTML = '<i class="fas fa-check-circle" style="color: #4CAF50;"></i> Сообщение успешно отправлено!';
-                responseDiv.style.color = '#DAA520';
-                form.reset();
-
-            } catch (error) {
-                console.error('Error:', error);
-                responseDiv.innerHTML = '<i class="fas fa-times-circle" style="color: #f44336;"></i> Произошла ошибка. Попробуйте позже.';
-                responseDiv.style.color = '#DAA520';
-            } finally {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Отправить сообщение';
-            }
-        }
-    </script>
 
     <footer style="
         text-align: center;
