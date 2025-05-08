@@ -5,6 +5,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Лилия Фёдорова — Секреты Молодости и Энергии</title>
+    <!-- Добавьте эти строки для favicon -->
+    <link rel="icon" type="image/webp" href="logo.webp">
+    <link rel="shortcut icon" type="image/webp" href="logo.webp">
+    <!-- Остальные теги head -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         body {
@@ -481,6 +485,16 @@
             </div>
 
             <script>
+                // Добавьте этот код в начало секции script
+                window.onbeforeunload = function () {
+                    window.scrollTo(0, 0);
+                };
+
+                // При загрузке страницы также прокручиваем вверх
+                window.onload = function () {
+                    window.scrollTo(0, 0);
+                };
+
                 class AudioPlayerController {
                     constructor() {
                         this.audioPlayer = document.getElementById('audioPlayer');
